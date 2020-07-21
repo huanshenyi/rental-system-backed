@@ -1,0 +1,36 @@
+from rest_framework.views import APIView
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django.utils.timezone import now
+from django.contrib.auth import get_user_model
+from .authorizations import generate_jwt, JWTAuthentication
+from .serializers import UserSerializer
+User = get_user_model()
+
+
+class LoginView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = AuthTokenSerializer(data=request.data, context={"request": request})
+        if serializer.is_valid():
+            user = serializer.validated_data.get("user")
+            user.last_login = now()
+            user.save()
+            token = generate_jwt(user)
+            user_serializer = UserSerializer(user)
+            return Response(data={"token": token, "user": user_serializer.data})
+        else:
+            print(serializer.errors)
+            return Response(data={"message": "提出データエラー"})
+
+
+class UserView(APIView):
+    authentication_classes = [JWTAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request):
+        # TODO:同じ所属のユーザーしか見れないのが普通
+        users = User.objects.all()
+        serializer = UserSerializer(data=users, many=True)
+        return Response(serializer.data)
+
