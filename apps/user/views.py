@@ -25,17 +25,19 @@ class LoginView(APIView):
 
 
 class UserView(APIView):
-    authentication_classes = [JWTAuthentication, ]
-    permission_classes = [IsAuthenticated, ]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         # TODO:同じ所属のユーザーしか見れないのが普通
         users = User.objects.all()
-        serializer = UserSerializer(data=users, many=True)
+        serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        pass
+        user = UserSerializer(source=request.data)
+        if user.validated_data():
+            pass
 
     def put(self, request):
         user = request.user
