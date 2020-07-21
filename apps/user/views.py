@@ -34,3 +34,17 @@ class UserView(APIView):
         serializer = UserSerializer(data=users, many=True)
         return Response(serializer.data)
 
+    def post(self, request):
+        pass
+
+    def put(self, request):
+        user = request.user
+        user.username = request.data.get("username")
+        user.telephone = request.data.get("telephone", None)
+        user.email = request.data.get("email")
+        user.avatar = request.data.get("avatar")
+        user.user_group = request.data.get("user_group")
+        user.save()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
