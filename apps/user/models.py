@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     telephone = models.CharField(unique=True, max_length=11, verbose_name="携帯番号", null=True)
     email = models.EmailField(unique=True, max_length=100, verbose_name="アドレス", null=True)
     username = models.CharField(max_length=100, verbose_name="ユーザーネーム", unique=False)
-    avatar = models.CharField(max_length=200, verbose_name="アイコンリンク")
+    avatar = models.CharField(max_length=200, verbose_name="アイコンリンク", null=True)
     data_joined = models.DateTimeField(auto_now_add=True, verbose_name="新規時間")
     is_active = models.BooleanField(default=True, verbose_name="アカウント状態")
     user_group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE, verbose_name="所属グループ")

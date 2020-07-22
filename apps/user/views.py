@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import status
 from django.utils.timezone import now
 from django.contrib.auth import get_user_model
 from .authorizations import generate_jwt, JWTAuthentication
@@ -35,9 +36,16 @@ class UserView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        user = UserSerializer(source=request.data)
-        if user.validated_data():
-            pass
+        ser = UserSerializer(data=request.data)
+        if ser.is_valid():
+            User.objects.create_user(
+                username=ser.validated_data["username"],
+                password=request.data["password"],
+                user_group=request.user.user_group
+            )
+        else:
+            return Response(data=ser.error_messages)
+        return Response(status=status.HTTP_201_CREATED)
 
     def put(self, request):
         user = request.user
