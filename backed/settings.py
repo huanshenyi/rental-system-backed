@@ -150,3 +150,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # usermodel書き換え
 AUTH_USER_MODEL = "user.User"
+
+REST_FRAMEWORK = {
+    # エラー処理
+    'EXCEPTION_HANDLER': 'utils.custom_exception.custom_exception_handler',
+}

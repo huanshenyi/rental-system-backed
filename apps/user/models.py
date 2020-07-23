@@ -2,13 +2,15 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from shortuuidfield import ShortUUIDField
 
+from utils.custom_exception import DataException
+
 
 class UserManager(BaseUserManager):
     def _create_user(self, username, password, **kwargs):
         if not username:
-            raise ValueError("ユーザーネーム入れて")
+            raise DataException(message="ユーザーネーム入れて")
         if not password:
-            raise ValueError("パスワード入れて")
+            raise DataException(message="パスワード入れて")
         user = self.model(username=username, **kwargs)
         user.set_password(password)
         user.save()

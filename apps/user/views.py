@@ -42,14 +42,11 @@ class UserView(APIView):
     def post(self, request):
         ser = UserSerializer(data=request.data)
         if ser.is_valid():
-            try:
-                User.objects.create_user(
-                    username=ser.validated_data["username"],
-                    password=request.data["password"],
-                    user_group=request.user.user_group
-                )
-            except ValueError:
-                return Response(data={"message": "ValueError"}, status=status.HTTP_400_BAD_REQUEST)
+            User.objects.create_user(
+                username=ser.validated_data["username"],
+                password=request.data["password"],
+                user_group=request.user.user_group
+            )
         else:
             return Response(data={"message": ser.error_messages}, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_201_CREATED)
