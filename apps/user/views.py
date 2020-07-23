@@ -1,3 +1,5 @@
+import os
+
 from rest_framework.views import APIView
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -5,8 +7,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.utils.timezone import now
 from django.contrib.auth import get_user_model
+from backed import settings
 from .authorizations import generate_jwt, JWTAuthentication
 from .serializers import UserSerializer
+import shortuuid
 User = get_user_model()
 
 
@@ -60,4 +64,27 @@ class UserView(APIView):
         user.save()
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+
+class AvatarUploadView(APIView):
+    """
+    アイコンのアップロード
+    """
+    authentication_classes = [JWTAuthentication, ]
+    permission_classes = [IsAuthenticated, ]
+
+    def save_file(self, file):
+        # obj.jpg => (obj, ipg)
+        filename = shortuuid.uuid() + os.path.splitext(file.name)[-1]
+        with open(os.path.join(settings.MEDIA_ROOT, filename), "wb") as fp:
+            for chunk in file.chunks():
+                fp.write(chunk)
+            return settings.MEDIA_URL + filename
+
+    def post(self, request):
+        file = request.FILES.get("file")
+        filepath = self.save_file(file)
+        # base urlに元ついてurlを生成する
+        fileurl = request.build_absolute_uri(filepath)
+        return Response({"picture": fileurl})
 
