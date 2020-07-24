@@ -154,4 +154,6 @@ AUTH_USER_MODEL = "user.User"
 REST_FRAMEWORK = {
     # エラー処理
     'EXCEPTION_HANDLER': 'utils.custom_exception.custom_exception_handler',
+    # APIドキュメント
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema'
 }
