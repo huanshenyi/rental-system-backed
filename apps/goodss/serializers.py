@@ -1,6 +1,7 @@
 __author__ = "ハリネズミ"
 from rest_framework import serializers
 from .models import Goods, Category, Tag
+from apps.user.serializers import UserSerializer
 
 
 class GoodsSerializer(serializers.ModelSerializer):
