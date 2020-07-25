@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include("apps.user.urls")),
     path('goodss/', include("apps.goodss.urls")),
+    path('loans/', include("apps.loans.urls")),
     path('docs/', include_docs_urls(title="backed"))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
