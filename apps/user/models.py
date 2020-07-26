@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, AbstractUser
 from shortuuidfield import ShortUUIDField
 
 from utils.custom_exception import DataException
@@ -31,6 +31,7 @@ class Group(models.Model):
     """
     name = models.CharField(max_length=100, verbose_name="グループ名")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name=u'新規時間')
+    owner = models.CharField(max_length=100, null=True, verbose_name="追加者")
     # TODO//グループの詳細何かあるといいのか?
     # TODO//更にグループ細分化する?
 
@@ -47,6 +48,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     data_joined = models.DateTimeField(auto_now_add=True, verbose_name="新規時間")
     is_active = models.BooleanField(default=True, verbose_name="アカウント状態")
     user_group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE, verbose_name="所属グループ")
+    is_staff = models.BooleanField(default=False, null=True, blank=True, verbose_name="グループ内のスタッフなのか")
 
     # default検証時に使用
     USERNAME_FIELD = "email"
