@@ -1,17 +1,21 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from apps.user.models import Group
+
 User = get_user_model()
 
 
 class Category(models.Model):
+    """
+    部品のカテゴリー
+    """
     STATUS_NORMAL = 1
     STATUS_DELETE = 0
     STATUS_ITEMS = (
         (STATUS_NORMAL, "正常"),
         (STATUS_DELETE, "削除"),
     )
-    name = models.CharField(max_length=50, verbose_name="カテゴリー")
+    name = models.CharField(max_length=50, verbose_name="カテゴリー名称", default='')
     status = models.PositiveIntegerField(default=STATUS_NORMAL, choices=STATUS_ITEMS, verbose_name="状態")
     is_nav = models.BooleanField(default=False, verbose_name="ナビに表示するか")
     owner = models.ForeignKey(User, verbose_name="作成者", on_delete=models.CASCADE)
@@ -19,6 +23,12 @@ class Category(models.Model):
 
     class Meta:
         verbose_name = verbose_name_plural = "カテゴリー"
+
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return ""
 
 
 class Tag(models.Model):
@@ -40,6 +50,12 @@ class Tag(models.Model):
     class Meta:
         verbose_name = verbose_name_plural = "タグ"
 
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return ""
+
 
 class Goods(models.Model):
     """
@@ -53,7 +69,7 @@ class Goods(models.Model):
         (STATUS_DELETE, '削除'),
         (STATUS_DRAFT, '編集中')
     )
-    name = models.CharField(max_length=255, verbose_name="品名", db_index=True)
+    name = models.CharField(max_length=255, verbose_name="品名", db_index=True, default='', )
     desc = models.CharField(max_length=1024, verbose_name="紹介", blank=True)
     status = models.PositiveIntegerField(default=STATUS_NORMAL, choices=STATUS_ITEMS, verbose_name="ステータス")
     image = models.ImageField(max_length=200, upload_to="goods/", null=True, default="", blank=True)
@@ -68,6 +84,7 @@ class Goods(models.Model):
         ordering = ['-id']
 
     def __str__(self):
-        return self.name
-
-
+        if self.name:
+            return self.name
+        else:
+            return ""

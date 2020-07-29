@@ -32,6 +32,9 @@ class Group(models.Model):
     name = models.CharField(max_length=100, verbose_name="グループ名")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name=u'新規時間')
     owner = models.CharField(max_length=100, null=True, verbose_name="追加者")
+
+    def __str__(self):
+        return str(self.name)
     # TODO//グループの詳細何かあるといいのか?
     # TODO//更にグループ細分化する?
 
@@ -64,3 +67,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.username
+
+    def __str__(self):
+        if self.username:
+            return str(self.username)
+        else:
+            return ""
