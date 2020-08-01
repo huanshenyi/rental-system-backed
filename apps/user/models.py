@@ -33,6 +33,10 @@ class Group(models.Model):
     create_time = models.DateTimeField(auto_now_add=True, verbose_name=u'新規時間')
     owner = models.CharField(max_length=100, null=True, verbose_name="追加者")
 
+    class Meta:
+        verbose_name = "ユーザーグループ"
+        verbose_name_plural = verbose_name
+
     def __str__(self):
         return str(self.name)
     # TODO//グループの詳細何かあるといいのか?
@@ -61,6 +65,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     EMAIL_FIELD = "email"
 
     objects = UserManager()
+
+    class Meta:
+        verbose_name = "ユーザー"
+        verbose_name_plural = verbose_name
 
     def get_full_user(self):
         return self.username

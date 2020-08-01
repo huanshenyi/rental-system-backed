@@ -17,7 +17,7 @@ class Period(models.Model):
         (STATUS_COMPLETE, "返却完了")
     )
 
-    user = models.ForeignKey(User, verbose_name="ユーザー", on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, verbose_name="ユーザー", on_delete=models.CASCADE)
     goods = models.ForeignKey(Goods, verbose_name="貸出品", on_delete=models.CASCADE)
     goods_num = models.IntegerField(default=1, verbose_name="貸出数")
     status = models.PositiveIntegerField(default=STATUS_NOTHING, choices=STATUS_ITEMS, verbose_name="状態")
@@ -29,9 +29,9 @@ class Period(models.Model):
     class Meta:
         verbose_name = "貸出スケジュール"
         verbose_name_plural = verbose_name
-        unique_together = ("user", "goods")
+        unique_together = ("owner", "goods")
 
     def __str__(self):
-        return "%s(%d)".format(self.goods.name, self.goods_num)
+        return "-%s(%d)".format(self.goods.name, self.goods_num)
 
 
