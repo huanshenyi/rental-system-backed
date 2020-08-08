@@ -28,3 +28,6 @@ jobs:
     - name: Run Tests
       run: |
         pytest
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: db.sqlite3
