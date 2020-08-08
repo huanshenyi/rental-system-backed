@@ -30,4 +30,4 @@ jobs:
         pytest
       env:
         DB_CONNECTION: sqlite
-        DB_DATABASE: db.sqlite3
+        DB_DATABASE: /home/runner/work/rental-system-backed/rental-system-backed/db.sqlite3
